@@ -95,7 +95,7 @@ function App() {
 
   useEffect(() => {
     // API Check
-    fetch('http://localhost:3000/api/status')
+    fetch('/api/status')
       .then((res) => {
         if (res.ok) setIsConnected(true);
         return res.json();
