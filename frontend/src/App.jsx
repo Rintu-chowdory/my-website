@@ -90,20 +90,20 @@ const projects = [
 ];
 
 function App() {
-  const [status, setStatus] = useState('Connecting to backend server...');
+  const [status, setStatus] = useState('Verifying connection...');
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Fetch backend status
+    // API Check
     fetch('http://localhost:3000/api/status')
       .then((res) => {
         if (res.ok) setIsConnected(true);
         return res.json();
       })
       .then((data) => setStatus(data.message))
-      .catch((err) => setStatus('Backend server is currently offline'));
+      .catch(() => setStatus('System Offline. Proceed locally.'));
 
-    // Intersection Observer for scroll animations
+    // Reveal Animation
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -116,85 +116,83 @@ function App() {
     );
 
     document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-    
     return () => observer.disconnect();
   }, []);
 
-  const scrollToProjects = () => {
-    document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <div className="container">
-      <div className="background-blur"></div>
-      
+      {/* Abstract Background Lines */}
+      <div className="flow-background">
+        <div className="flow-line"></div>
+        <div className="flow-line"></div>
+        <div className="flow-line"></div>
+      </div>
+
       {/* Hero Section */}
-      <section className="hero-section reveal">
-        <div className="glass-card header-card split-layout">
-          <div className="text-content">
-            <h1 className="title">
-              <span className="highlight">Rintu</span> Chowdory
-            </h1>
-            <p className="subtitle">Full Stack Developer | Architecting Elegant Solutions</p>
-            
-            <div className="status-badge">
-              <span className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}></span>
-              {status}
-            </div>
-            <br/>
-            <button className="interactive-btn" onClick={scrollToProjects}>
-              View My Work
-            </button>
-          </div>
-          <div className="image-content">
-            <img 
-              src="https://github.com/rintuchowdory.png" 
-              alt="Rintu Chowdory" 
-              className="main-profile" 
-            />
-          </div>
+      <section className="section-wrapper hero-section reveal">
+        <div className="status-pill">
+          <span className="pulse-dot"></span>
+          {status}
+        </div>
+        
+        <img 
+          src="https://github.com/rintuchowdory.png" 
+          alt="Rintu Chowdory" 
+          className="minimal-profile" 
+        />
+        
+        <h1 className="elegant-title">
+          Where Logic <br /> Creates <span className="gradient-text">Beauty</span>
+        </h1>
+        
+        <p className="elegant-subtitle">
+          Rintu Chowdory — Full Stack Developer & Architect. Crafting seamless digital experiences through modern engineering, robust architecture, and minimalist design.
+        </p>
+        
+        <button className="ghost-btn" onClick={() => scrollToSection('work')}>
+          Explore Projects
+        </button>
+      </section>
+
+      {/* About Section */}
+      <section className="section-wrapper reveal">
+        <p className="section-label" style={{ textAlign: "center" }}>Dissolving Boundaries</p>
+        <div className="glass-panel centered-text">
+          <p className="elegant-subtitle" style={{ margin: 0 }}>
+            "I am deeply passionate about cybersecurity, software engineering, and artificial intelligence. My philosophy is rooted in building lightweight, highly secure, and elegant systems. From bare-metal Docker configurations to fully automated CI/CD pipelines, I thrive on constructing solutions that are completely transparent to the user, yet incredibly resilient underneath."
+          </p>
         </div>
       </section>
 
-      {/* About Section with Generated Image */}
-      <section className="about-section reveal">
-         <div className="glass-card full-width">
-           <div className="split-layout reverse">
-             <div className="text-content">
-               <h2 className="section-title" style={{ textAlign: "left", marginBottom: "1.5rem" }}>A Passion for Technology</h2>
-               <p className="project-description" style={{fontSize: '1.1rem', lineHeight: '1.8'}}>
-                 I am deeply passionate about cybersecurity, software engineering, and artificial intelligence. My goal is to build secure, scalable, and high-performance applications that make a tangible difference. From configuring Docker containers to deploying automated CI/CD workflows via GitHub Actions, I strive to master the full software development lifecycle.
-               </p>
-             </div>
-             <div className="image-content">
-               <img src="/hacker.png" alt="Futuristic coding setup" className="feature-image float-animation" />
-             </div>
-           </div>
-         </div>
-      </section>
-
       {/* Projects Showcase */}
-      <section id="projects" className="projects-section reveal">
-        <h2 className="section-title">Professional Journey</h2>
+      <section id="work" className="section-wrapper reveal">
+        <p className="section-label">Creative Exploration</p>
+        <h2 className="elegant-title" style={{ fontSize: '2.5rem', marginBottom: '4rem', textAlign: 'center' }}>Professional Journey</h2>
+        
         <div className="projects-grid">
           {projects.map((project, index) => (
             <div 
               key={project.id} 
-              className={`project-card reveal ${project.isImportant ? 'important' : ''}`}
-              style={{ transitionDelay: `${index * 50}ms` }}
+              className={`glass-panel project-panel reveal`}
+              style={{ transitionDelay: `${(index % 3) * 100}ms` }}
             >
-              {project.isImportant && <span className="important-badge">Featured</span>}
+              {project.isImportant && <span className="badge-featured">Featured</span>}
               <h3 className="project-title">{project.title}</h3>
-              <p className="project-description">{project.description}</p>
-              <div className="project-links">
+              <p className="project-desc">{project.description}</p>
+              
+              <div style={{ display: 'flex', gap: '1.5rem' }}>
                 {project.link && (
                   <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-link">
-                    Live Demo ↗
+                    Explore App →
                   </a>
                 )}
                 {project.repo && (
                   <a href={project.repo} target="_blank" rel="noopener noreferrer" className="project-link">
-                    GitHub Repo ↗
+                    Source Code →
                   </a>
                 )}
               </div>
@@ -203,43 +201,39 @@ function App() {
         </div>
       </section>
 
-      {/* Contact Section with Parallax Image Background */}
-      <section className="contact-section relative-container reveal">
-        <img src="/server.png" alt="Server room" className="parallax-bg" />
-        <div className="glass-card contact-card">
-          <h2 className="section-title" style={{ marginBottom: "1rem" }}>Get In Touch</h2>
-          <p className="subtitle" style={{ fontSize: "1rem", color: "#e2e8f0" }}>Feel free to reach out for collaborations or just a friendly hello!</p>
+      {/* Contact Matrix */}
+      <section className="section-wrapper reveal" style={{ marginTop: '0', paddingBottom: '6rem' }}>
+        <h2 className="elegant-title" style={{ fontSize: '2.5rem', marginBottom: '4rem', textAlign: 'center' }}>Establish Connection</h2>
+        
+        <div className="contact-matrix">
+          <a href="mailto:Rintuchowdory@outlook.de" className="contact-node">
+            <span className="node-label">Transmissions</span>
+            <span className="node-value">Rintuchowdory@outlook.de</span>
+          </a>
           
-          <div className="contact-grid">
-            <a href="mailto:Rintuchowdory@outlook.de" className="contact-item reveal">
-              <span className="contact-label">Email</span>
-              <span className="contact-value">Rintuchowdory@outlook.de</span>
-            </a>
-            
-            <a href="tel:017666621563" className="contact-item reveal" style={{ transitionDelay: '100ms' }}>
-              <span className="contact-label">Phone</span>
-              <span className="contact-value">017666621563</span>
-            </a>
-            
-            <a href="https://www.linkedin.com/in/rintu-chowdory/" target="_blank" rel="noopener noreferrer" className="contact-item reveal" style={{ transitionDelay: '200ms' }}>
-              <span className="contact-label">LinkedIn</span>
-              <span className="contact-value">rintu-chowdory</span>
-            </a>
-            
-            <a href="https://github.com/rintuchowdory" target="_blank" rel="noopener noreferrer" className="contact-item reveal" style={{ transitionDelay: '300ms' }}>
-              <span className="contact-label">GitHub</span>
-              <span className="contact-value">rintuchowdory</span>
-            </a>
-            
-            <a href="https://hub.docker.com/u/riinnttuu?_g" target="_blank" rel="noopener noreferrer" className="contact-item reveal" style={{ transitionDelay: '400ms' }}>
-              <span className="contact-label">Docker Hub</span>
-              <span className="contact-value">riinnttuu</span>
-            </a>
+          <a href="tel:017666621563" className="contact-node">
+            <span className="node-label">Voice</span>
+            <span className="node-value">017666621563</span>
+          </a>
+          
+          <a href="https://www.linkedin.com/in/rintu-chowdory/" target="_blank" rel="noopener noreferrer" className="contact-node">
+            <span className="node-label">Professional</span>
+            <span className="node-value">LinkedIn Profile</span>
+          </a>
+          
+          <a href="https://github.com/rintuchowdory" target="_blank" rel="noopener noreferrer" className="contact-node">
+            <span className="node-label">Repositories</span>
+            <span className="node-value">GitHub Account</span>
+          </a>
+          
+          <a href="https://hub.docker.com/u/riinnttuu?_g" target="_blank" rel="noopener noreferrer" className="contact-node">
+            <span className="node-label">Containers</span>
+            <span className="node-value">Docker Hub</span>
+          </a>
 
-            <div className="contact-item reveal" style={{ cursor: "default", transitionDelay: '500ms' }}>
-              <span className="contact-label">Address</span>
-              <span className="contact-value">Breite Strasse</span>
-            </div>
+          <div className="contact-node" style={{ cursor: 'default' }}>
+            <span className="node-label">Location Base</span>
+            <span className="node-value">Breite Strasse</span>
           </div>
         </div>
       </section>

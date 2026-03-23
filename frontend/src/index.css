@@ -1,12 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap');
 
 :root {
-  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --bg-primary: #030305;
+  --bg-secondary: #0a0a0f;
+  
   --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --accent: #8b5cf6;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --text-dim: rgba(255, 255, 255, 0.3);
+  
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-glow: rgba(100, 200, 255, 0.2);
+  
+  --glass-bg: rgba(255, 255, 255, 0.015);
+  --glass-hover: rgba(255, 255, 255, 0.04);
+  
+  --accent-cyan: #38bdf8;
+  --accent-purple: #c084fc;
 }
 
 * {
@@ -15,28 +24,61 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Inter', sans-serif;
-  background: var(--bg-gradient);
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
   overflow-x: hidden;
+  font-weight: 300;
+  line-height: 1.6;
 }
 
-.background-blur {
+/* Base Body Vignette / Glow Effect */
+body::before {
+  content: '';
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
-  animation: pulse 15s infinite alternate;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, rgba(30, 64, 175, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: -2;
+}
+
+/* Animated Flowing Lines Background */
+.flow-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   z-index: -1;
   pointer-events: none;
+  overflow: hidden;
+  opacity: 0.4;
 }
 
-@keyframes pulse {
-  0% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.1) translate(-2%, 3%); }
-  100% { transform: scale(1.2) translate(5%, 5%); }
+.flow-line {
+  position: absolute;
+  width: 200vw;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), rgba(56, 189, 248, 0.3), transparent);
+  border-radius: 50%;
+  animation: flowWave linear infinite;
+}
+
+.flow-line:nth-child(1) { top: 20%; left: -50%; animation-duration: 25s; filter: blur(2px); }
+.flow-line:nth-child(2) { top: 40%; left: -80%; animation-duration: 35s; filter: blur(4px); transform: rotate(-5deg); background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent); }
+.flow-line:nth-child(3) { top: 70%; left: -40%; animation-duration: 30s; filter: blur(3px); transform: rotate(8deg); background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent); }
+
+@keyframes flowWave {
+  0% { transform: translateX(0) scaleY(1); }
+  50% { transform: translateX(20%) scaleY(2); }
+  100% { transform: translateX(0) scaleY(1); }
 }
