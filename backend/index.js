@@ -9,12 +9,24 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
+const startedAt = Date.now();
+let visits = 0;
+
 app.use(cors());
 app.use(express.json());
 
 // API Routes need to be defined BEFORE the static file catch-all
 app.get('/api/status', (req, res) => {
-  res.json({ status: 'success', message: 'Backend connected established! ✨' });
+  res.json({
+    status: 'success',
+    message: 'Backend connection established! ✨',
+    uptimeSeconds: Math.floor((Date.now() - startedAt) / 1000),
+  });
+});
+
+app.get('/api/visits', (req, res) => {
+  visits += 1;
+  res.json({ visits });
 });
 
 // Serve frontend static files in production
